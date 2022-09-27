@@ -31,5 +31,18 @@ namespace BookStoreAPI.Controllers
             repo.AddCategory(cat);
             return Ok();
         }
+        [HttpPut]
+        public IHttpActionResult Put(Category cat)
+        {
+            repo.EditCategory(cat);
+            return Ok();
+        }
+
+        [HttpDelete]
+        public IHttpActionResult Delete(int id)
+        {
+            repo.DeleteCategory(id);
+            return Ok();
+        }
     }
 }

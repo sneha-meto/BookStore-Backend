@@ -31,7 +31,7 @@ namespace BookStoreAPI.Models
 
         public void DeleteCategory(int id)
         {
-            comm.CommandText = "delete from Category where CatgeoryId="+id+"";
+            comm.CommandText = "delete from Category where CategoryId="+id+"";
             comm.Connection = conn;
             conn.Open();
             comm.ExecuteNonQuery();
@@ -42,7 +42,7 @@ namespace BookStoreAPI.Models
         {
             int statBit = category.Status ? 1 : 0;
 
-            comm.CommandText = "update Category set CategoryId="+category.CategoryId+",CategoryName='"+category.CategoryName+"',[Description]='"+category.Description+"',[Image]='"+category.Image+"',[Status]="+statBit+",Position="+category.Position+",CreatedAt='"+category.CreatedAt+"'); ";
+            comm.CommandText = "update Category set CategoryName='"+category.CategoryName+"',[Description]='"+category.Description+"',[Image]='"+category.Image+"',[Status]="+statBit+",Position="+category.Position+",CreatedAt='"+category.CreatedAt+"' where CategoryId="+category.CategoryId+";";
             comm.Connection = conn;
             conn.Open();
             comm.ExecuteNonQuery();
@@ -52,7 +52,7 @@ namespace BookStoreAPI.Models
         public List<Category> GetCategories()
         {
             List<Category> categories = new List<Category>();
-            comm.CommandText = "select * from Category";
+            comm.CommandText = "select * from Category where Status= 1 order by Position";
             comm.Connection = conn;
             conn.Open();
             SqlDataReader reader=  comm.ExecuteReader();
