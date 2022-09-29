@@ -21,19 +21,33 @@ namespace BookStoreAPI.Models
       
         public void Register(User user)
         {
-          
-            comm.CommandText = "insert into [User] values (1,'"+user.UserName+"','"+user.Password+"','"+user.Email+"')";
+            comm.CommandText = "insert into [User] values (1,'"+user.UserName+"','"+user.Password+"','"+user.Email+"',1)";
             comm.Connection = conn;
             conn.Open();
             comm.ExecuteNonQuery();
             conn.Close();
         }
 
-        public void Login(string username, string password)
+        public bool Login(string username, string password)
         {
-            throw new NotImplementedException();
+            comm.CommandText = "select * from [User] where UserName= '" + username + "' and [Password] = '" + password + "'";
+            comm.Connection = conn;
+            conn.Open();
+            SqlDataReader reader = comm.ExecuteReader();
+            
+            if (reader.HasRows ) return true;
+            else return false;
         }
 
-     
+        public void Activation(int id, int activate)
+        {
+            comm.CommandText = "update [User] set Active = "+activate+" where userId="+id+" ";
+            comm.Connection = conn;
+            conn.Open();
+            comm.ExecuteNonQuery();
+            conn.Close();
+        }
+
+
     }
 }

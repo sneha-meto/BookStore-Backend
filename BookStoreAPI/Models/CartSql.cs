@@ -29,7 +29,8 @@ namespace BookStoreAPI.Models
 
         public List<CartItem> GetItems(int id)
         { List<CartItem> itemList = new List<CartItem>();
-            comm.CommandText = "select * from CartItems where CartId="+id+"";
+            //comm.CommandText = "select * from CartItems  where CartId="+id+"";
+            comm.CommandText = "select c.CartItemId,c.qty,c.BookId,c.CartId,b.Price from CartItems c inner join Books b on c.BookId= b.BookId  where CartId=" + id + "";
             comm.Connection = conn;
             conn.Open();
             SqlDataReader reader = comm.ExecuteReader();
@@ -39,7 +40,8 @@ namespace BookStoreAPI.Models
                 int qty = Convert.ToInt32(reader["Qty"]);
                 int bookId = Convert.ToInt32(reader["BookId"]);
                 int cartId = Convert.ToInt32(reader["CartId"]);
-                CartItem cartItem = new CartItem(cartItemId, qty, bookId, cartId);
+                float price = float.Parse(reader["Price"].ToString());
+                CartItem cartItem = new CartItem(cartItemId, qty, bookId, cartId,price);
                 itemList.Add(cartItem);
             }
             conn.Close();

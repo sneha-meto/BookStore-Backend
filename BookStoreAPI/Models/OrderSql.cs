@@ -23,7 +23,7 @@ namespace BookStoreAPI.Models
         public List<Order> GetOrders()
         {
             List<Order> itemList = new List<Order>();
-            comm.CommandText = "select * from Order";
+            comm.CommandText = "select * from [Order]";
             comm.Connection = conn;
             conn.Open();
             SqlDataReader reader = comm.ExecuteReader();
@@ -31,11 +31,16 @@ namespace BookStoreAPI.Models
             {
                 int orderId = Convert.ToInt32(reader["OrderId"]);
                 DateTime date = Convert.ToDateTime(reader["Date"]);
-                float amount = float.Parse( reader["Amount"].ToString());
+                float amount = float.Parse(reader["Amount"].ToString());
                 int userId = Convert.ToInt32(reader["UserId"]);
                 string address = reader["Address"].ToString();
-
-                Order order= new Order(orderId, date, amount, userId, address);
+                int? couponId=null;
+                if (!reader.IsDBNull(5) ){ 
+                couponId = Convert.ToInt32(reader["CouponId"]);
+                
+                }
+                float netAmount = float.Parse(reader["NetAmount"].ToString());
+                Order order= new Order(orderId, date, amount, userId, address,couponId,netAmount);
                 itemList.Add(order);
             }
             conn.Close();
@@ -46,7 +51,7 @@ namespace BookStoreAPI.Models
         public List<OrderItem> GetItems(int id)
         {
             List<OrderItem> itemList = new List<OrderItem>();
-            comm.CommandText = "select * from OrderItem where OrderId="+id+"";
+            comm.CommandText = "select * from OrderItems where OrderId="+id+"";
             comm.Connection = conn;
             conn.Open();
             SqlDataReader reader = comm.ExecuteReader();
@@ -65,18 +70,43 @@ namespace BookStoreAPI.Models
 
         }
 
-        public void PlaceOrder(int cartId, string address)
+        private string GenerateItems(List<CartItem> items, int orderId)
         {
-            comm.CommandText = "select * from CartItems where CartId="+cartId+"";
+            string str = "insert into OrderItems values ";
+            foreach (CartItem item in items)
+            {
+                str += "(" + item.Qty + ", " + item.BookId + ", " + orderId + "),";
+            }
+            str = str.Remove(str.Length - 1);
+            str += ";";
+            return str;
 
-            //create order
-            //insert into [Order] values ('2022-9-20',500,1,'street 13')
-            //insert into OrderItems values(1,1,1)
+        }
 
-            //todo: finish order apis and test
+        private dynamic GetCouponId(int? id)
+        {
+            if (id == null)
+                return "null";
+            else return id;
+        }
+      
+
+        public void PlaceOrder(List<CartItem> items,string address, int userId,int? couponId,float discount)
+        {
+            float total=0f;
+            foreach (CartItem item in items)
+                total += item.Price * item.Qty;
+            float net = total - (total * discount);
+
+            comm.CommandText = "insert into [Order] values ('"+DateTime.Today.ToString("yyyy-MM-dd") +"',"+total+","+userId+",'" + address + "',"+GetCouponId(couponId)+","+net+");" + "SELECT SCOPE_IDENTITY();"; 
 
             comm.Connection = conn;
             conn.Open();
+            object res = comm.ExecuteScalar();
+            int orderId=Convert.ToInt32(res);
+
+            comm.CommandText = GenerateItems(items, orderId);
+
             comm.ExecuteNonQuery();
             conn.Close();
         }

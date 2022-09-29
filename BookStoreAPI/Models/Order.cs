@@ -7,13 +7,15 @@ namespace BookStoreAPI.Models
 {
     public class Order
     {
-        public Order(int orderId, DateTime date, float amount, int userId, string address)
+        public Order(int orderId, DateTime date, float amount, int userId, string address,int? couponId, float netAmount)
         {
             OrderId = orderId;
             Date = date;
             Amount = amount;
             UserId = userId;
             Address = address;
+            CouponId = couponId;
+            NetAmount = netAmount;
         }
 
         public int OrderId { get; set; }
@@ -21,5 +23,7 @@ namespace BookStoreAPI.Models
         public float Amount { get; set; }
         public int UserId { get; set; }
         public string Address { get; set; }
+        public int? CouponId { get; set; }
+        public float NetAmount { get; set; }
 }
 }

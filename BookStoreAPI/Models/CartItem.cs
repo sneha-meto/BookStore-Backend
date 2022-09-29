@@ -7,16 +7,20 @@ namespace BookStoreAPI.Models
 {
     public class CartItem
     {
-        public CartItem(int cartItemId,int qty, int bookId, int cartId)
+        public CartItem(int cartItemId,int qty, int bookId, int cartId, float price)
         {
             CartItemId = cartItemId;
             Qty = qty;
             BookId = bookId;
             CartId = cartId;
+
+            Price = price;
         }
         public int CartItemId;
         public int Qty { get; set; }
         public int BookId { get; set; }
         public int CartId { get; set; }
+
+        public float Price;
     }
 }
