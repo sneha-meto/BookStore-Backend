@@ -36,7 +36,7 @@ namespace BookStoreAPI.Controllers
         public IHttpActionResult PlaceOrder(JObject data)
         {
             List<CartItem> items = data["items"].ToObject<List<CartItem>>();
-            string address = data["address"].ToString();
+            int addressId = Convert.ToInt32(data["addressId"]);
             int userId = Convert.ToInt32(data["userId"]);
            
             //int? couponId = null;
@@ -44,7 +44,7 @@ namespace BookStoreAPI.Controllers
             int? couponId = ((int?)data["couponId"]); 
            
             float discount = float.Parse(data["discount"].ToString());
-            repo.PlaceOrder(items,address,userId,couponId,discount);
+            repo.PlaceOrder(items,addressId,userId,couponId,discount);
             return Ok("Order placed");
         }
 

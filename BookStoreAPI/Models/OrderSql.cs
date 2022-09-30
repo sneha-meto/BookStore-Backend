@@ -33,14 +33,14 @@ namespace BookStoreAPI.Models
                 DateTime date = Convert.ToDateTime(reader["Date"]);
                 float amount = float.Parse(reader["Amount"].ToString());
                 int userId = Convert.ToInt32(reader["UserId"]);
-                string address = reader["Address"].ToString();
+                int addressId = Convert.ToInt32(reader["AddressId"]);
                 int? couponId=null;
                 if (!reader.IsDBNull(5) ){ 
                 couponId = Convert.ToInt32(reader["CouponId"]);
                 
                 }
                 float netAmount = float.Parse(reader["NetAmount"].ToString());
-                Order order= new Order(orderId, date, amount, userId, address,couponId,netAmount);
+                Order order= new Order(orderId, date, amount, userId, addressId,couponId,netAmount);
                 itemList.Add(order);
             }
             conn.Close();
@@ -91,14 +91,14 @@ namespace BookStoreAPI.Models
         }
       
 
-        public void PlaceOrder(List<CartItem> items,string address, int userId,int? couponId,float discount)
+        public void PlaceOrder(List<CartItem> items,int addressId, int userId,int? couponId,float discount)
         {
             float total=0f;
             foreach (CartItem item in items)
                 total += item.Price * item.Qty;
             float net = total - (total * discount);
 
-            comm.CommandText = "insert into [Order] values ('"+DateTime.Today.ToString("yyyy-MM-dd") +"',"+total+","+userId+",'" + address + "',"+GetCouponId(couponId)+","+net+");" + "SELECT SCOPE_IDENTITY();"; 
+            comm.CommandText = "insert into [Order] values ('"+DateTime.Today.ToString("yyyy-MM-dd") +"',"+total+","+userId+",'" + addressId + "',"+GetCouponId(couponId)+","+net+");" + "SELECT SCOPE_IDENTITY();"; 
 
             comm.Connection = conn;
             conn.Open();
