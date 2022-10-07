@@ -83,3 +83,6 @@ C:\Users\smeto\source\repos\BookStoreAPI\BookStoreAPI\obj\Debug\BookStoreAPI.csp
 C:\Users\smeto\source\repos\BookStoreAPI\BookStoreAPI\obj\Debug\BookStoreAPI.csproj.CopyComplete
 C:\Users\smeto\source\repos\BookStoreAPI\BookStoreAPI\obj\Debug\BookStoreAPI.dll
 C:\Users\smeto\source\repos\BookStoreAPI\BookStoreAPI\obj\Debug\BookStoreAPI.pdb
+C:\Users\smeto\source\repos\BookStoreAPI\BookStoreAPI\bin\System.Web.Cors.dll
+C:\Users\smeto\source\repos\BookStoreAPI\BookStoreAPI\bin\System.Web.Http.Cors.dll
+C:\Users\smeto\source\repos\BookStoreAPI\BookStoreAPI\bin\System.Web.Http.Cors.xml

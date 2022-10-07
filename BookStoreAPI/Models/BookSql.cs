@@ -106,6 +106,34 @@ namespace BookStoreAPI.Models
          
         }
 
+        public List<Book> GetBooksByCategory(int id)
+        {
+            List<Book> bookList = new List<Book>();
+            comm.CommandText = "select * from Books where CategoryId =" + id + " and Status= 1 order by Position ;";
+            comm.Connection = conn;
+            conn.Open();
+            SqlDataReader reader = comm.ExecuteReader();
+            while (reader.Read())
+            {
+                int bookId = Convert.ToInt32(reader["BookId"]);
+                int categoryId = Convert.ToInt32(reader["CategoryId"]);
+                string title = reader["Title"].ToString();
+                string isbn = reader["ISBN"].ToString();
+                int year = Convert.ToInt32(reader["Year"]);
+                float price = float.Parse(reader["Price"].ToString());
+                string description = reader["Description"].ToString();
+                int position = Convert.ToInt32(reader["Position"]);
+                bool status = Convert.ToBoolean(reader["Status"]);
+                string image = reader["Image"].ToString();
+                string author = reader["Author"].ToString();
+
+                Book book = new Book(bookId, categoryId, title, isbn, year, price, description, position, status, image, author);
+                bookList.Add(book);
+            }
+            conn.Close();
+            return bookList;
+        }
+
         public List<Book> SearchBooks(string type, string key)
         {
             //User can search for book by name / category / ISBN / Author

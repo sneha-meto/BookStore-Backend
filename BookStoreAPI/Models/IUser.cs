@@ -8,7 +8,7 @@ namespace BookStoreAPI.Models
     public interface IUser
     {
         void Register(User user);
-        bool Login(string username, string password);
+        int Login(string username, string password);
         void Activation(int id, int activate);
 
 

@@ -5,9 +5,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace BookStoreAPI.Controllers
 {
+    [EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
     public class CartController : ApiController
     {
 
@@ -25,12 +27,12 @@ namespace BookStoreAPI.Controllers
             return Ok(data);
         }
 
-        [HttpPost, Route("api/cart/create/{id}")]
-        public IHttpActionResult CreateCart(int id)
-        {
-            repo.CreateCart(id);
-            return Ok("cart created");
-        }
+        //[HttpPost, Route("api/cart/create/{id}")]
+        //public IHttpActionResult CreateCart(int id)
+        //{
+        //    repo.CreateCart(id);
+        //    return Ok("cart created");
+        //}
 
         [HttpPost]
         public IHttpActionResult AddItem(CartItem item)

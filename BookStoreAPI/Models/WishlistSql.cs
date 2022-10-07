@@ -38,7 +38,7 @@ namespace BookStoreAPI.Models
         public List<Wishlist> getWishlist(int id)
         {
             List<Wishlist> wishes = new List<Wishlist>();
-            comm.CommandText = "select * from Wishlist where UserId="+id+";";
+            comm.CommandText = "select w.WishlistId, w.BookId, w.UserId, b.[Image], b.Title, b.Author,b.Position, b.Price from Wishlist w inner join Books b on w.BookId=b.BookId where UserId ="+id+";";
             comm.Connection = conn;
             conn.Open();
             SqlDataReader reader = comm.ExecuteReader();
@@ -48,7 +48,13 @@ namespace BookStoreAPI.Models
                 int bookId = Convert.ToInt32(reader["BookId"]);
                 int userId = Convert.ToInt32(reader["UserId"]);
 
-                Wishlist wish = new Wishlist(wishlistId, bookId, userId);
+                string image = reader["Image"].ToString();
+                string title = reader["Title"].ToString();
+                string author = reader["Author"].ToString();
+                int position = Convert.ToInt32(reader["Position"]); ;
+                float price = float.Parse( reader["Price"].ToString());
+
+                Wishlist wish = new Wishlist(wishlistId, bookId, userId,image,title,author,position,price);
                 wishes.Add(wish);
             }
             conn.Close();

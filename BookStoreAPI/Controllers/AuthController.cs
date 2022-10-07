@@ -6,9 +6,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace BookStoreAPI.Controllers
 {
+    [EnableCors(origins: "http://localhost:4200", headers: "*", methods: "*")]
     public class AuthController : ApiController
     {
         private IUser repo;
@@ -18,7 +20,7 @@ namespace BookStoreAPI.Controllers
             repo = new UserSql();
         }
 
-        [HttpPost,Route("api/auth/register")]
+        [HttpPost, Route("api/auth/register")]
         public IHttpActionResult Register(User user)
         {
             repo.Register(user);
@@ -30,9 +32,9 @@ namespace BookStoreAPI.Controllers
         {
             string username =data["username"].ToString();
             string password = data["password"].ToString();
-            bool res =  repo.Login(username,password);
-            if (res) return Ok("user logged in");
-            else return Ok("user login failed");
+            int res =  repo.Login(username,password);
+            if (res!=0) return Ok(res);
+            else return Unauthorized();
         }
 
         [HttpPut, Route("api/auth/{id}/{activate}")]

@@ -20,7 +20,7 @@ namespace BookStoreAPI.Models
 
         public void AddItem(CartItem item)
         {
-          comm.CommandText = "insert into CartItems values(" + item.Qty + "," + item.BookId + "," + item.CartId + ")";
+          comm.CommandText = "insert into CartItems values(" + item.Qty + "," + item.BookId + "," + item.UserId + ")";
             comm.Connection = conn;
             conn.Open();
             comm.ExecuteNonQuery();
@@ -30,7 +30,7 @@ namespace BookStoreAPI.Models
         public List<CartItem> GetItems(int id)
         { List<CartItem> itemList = new List<CartItem>();
             //comm.CommandText = "select * from CartItems  where CartId="+id+"";
-            comm.CommandText = "select c.CartItemId,c.qty,c.BookId,c.CartId,b.Price from CartItems c inner join Books b on c.BookId= b.BookId  where CartId=" + id + "";
+            comm.CommandText = "select c.CartItemId,c.qty,c.BookId, c.UserId,b.Price, b.Title,b.Image from CartItems c inner join Books b on c.BookId= b.BookId  where UserId=" + id + "";
             comm.Connection = conn;
             conn.Open();
             SqlDataReader reader = comm.ExecuteReader();
@@ -39,9 +39,11 @@ namespace BookStoreAPI.Models
                 int cartItemId = Convert.ToInt32(reader["CartItemId"]);
                 int qty = Convert.ToInt32(reader["Qty"]);
                 int bookId = Convert.ToInt32(reader["BookId"]);
-                int cartId = Convert.ToInt32(reader["CartId"]);
+                int userId = Convert.ToInt32(reader["UserId"]);
                 float price = float.Parse(reader["Price"].ToString());
-                CartItem cartItem = new CartItem(cartItemId, qty, bookId, cartId,price);
+                string title = reader["Title"].ToString();
+                string image = reader["Image"].ToString();
+                CartItem cartItem = new CartItem(cartItemId, qty, bookId, userId,price,title,image);
                 itemList.Add(cartItem);
             }
             conn.Close();
@@ -67,13 +69,13 @@ namespace BookStoreAPI.Models
             conn.Close();
         }
 
-        public void CreateCart(int userId)
-        {
-            comm.CommandText = "insert into Cart values('" + userId + "')";
-            comm.Connection = conn;
-            conn.Open();
-            comm.ExecuteNonQuery();
-            conn.Close();
-        }
+        //public void CreateCart(int userId)
+        //{
+        //    comm.CommandText = "insert into Cart values('" + userId + "')";
+        //    comm.Connection = conn;
+        //    conn.Open();
+        //    comm.ExecuteNonQuery();
+        //    conn.Close();
+        //}
     }
 }

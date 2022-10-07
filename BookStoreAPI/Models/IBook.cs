@@ -8,6 +8,7 @@ namespace BookStoreAPI.Models
     public interface IBook
     {
         List<Book> GetBooks();
+        List<Book> GetBooksByCategory(int id);
         Book GetBookById(int id);
         void AddBook(Book book);
         void EditBook(Book book);
