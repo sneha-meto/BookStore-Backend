@@ -138,7 +138,36 @@ namespace BookStoreAPI.Models
         {
             //User can search for book by name / category / ISBN / Author
             List<Book> bookList = new List<Book>();
-            comm.CommandText = "select * from Books where "+type+" like '%"+key+"%' and Status = 1";
+            comm.CommandText = "select b.BookId, b.CategoryId, b.Title, b.ISBN, b.Year, b.Price, b.Description, b.Position,b.Status,b.Image,b.Author,c.CategoryName from Books b inner join Category c on b.CategoryId=c.CategoryId  where " + type + " like '%" + key + "%' and b.Status = 1;";
+            comm.Connection = conn;
+            conn.Open();
+            SqlDataReader reader = comm.ExecuteReader();
+            while (reader.Read())
+            {
+                int bookId = Convert.ToInt32(reader["BookId"]);
+                int categoryId = Convert.ToInt32(reader["CategoryId"]);
+                string title = reader["Title"].ToString();
+                string isbn = reader["ISBN"].ToString();
+                int year = Convert.ToInt32(reader["Year"]);
+                float price = float.Parse(reader["Price"].ToString());
+                string description = reader["Description"].ToString();
+                int position = Convert.ToInt32(reader["Position"]);
+                bool status = Convert.ToBoolean(reader["Status"]);
+                string image = reader["Image"].ToString();
+                string author = reader["Author"].ToString();
+
+                Book book = new Book(bookId, categoryId, title, isbn, year, price, description, position, status, image, author);
+                bookList.Add(book);
+            }
+            conn.Close();
+            return bookList;
+        }
+
+        public List<Book> SearchAllBooks(string type, string key)
+        {
+            //User can search for book by name / category / ISBN / Author
+            List<Book> bookList = new List<Book>();
+            comm.CommandText = "select b.BookId, b.CategoryId, b.Title, b.ISBN, b.Year, b.Price, b.Description, b.Position,b.Status,b.Image,b.Author,c.CategoryName from Books b inner join Category c on b.CategoryId=c.CategoryId  where " + type + " like '%" + key + "%'";
             comm.Connection = conn;
             conn.Open();
             SqlDataReader reader = comm.ExecuteReader();

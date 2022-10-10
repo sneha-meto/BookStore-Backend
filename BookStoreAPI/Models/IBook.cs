@@ -16,7 +16,7 @@ namespace BookStoreAPI.Models
 
 
         List<Book> SearchBooks(string type, string key);
-
+        List<Book> SearchAllBooks(string type, string key);
 
     }
 }

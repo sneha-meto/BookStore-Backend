@@ -32,8 +32,8 @@ namespace BookStoreAPI.Controllers
         {
             string username =data["username"].ToString();
             string password = data["password"].ToString();
-            int res =  repo.Login(username,password);
-            if (res!=0) return Ok(res);
+            int[] res =  repo.Login(username,password);
+            if (res[0]!=0) return Ok(res);
             else return Unauthorized();
         }
 
@@ -45,6 +45,14 @@ namespace BookStoreAPI.Controllers
             if (activate) return Ok("user activated");
             else return Ok("user deactivated");
         }
+
+        [HttpGet, Route("api/auth/search/{type}/{key}")]
+        public IHttpActionResult Search(string type, string key)
+        {
+            var data = repo.SearchUser(type, key);
+            return Ok(data);
+        }
+
 
     }
 }

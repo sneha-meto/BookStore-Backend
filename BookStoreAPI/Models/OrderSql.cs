@@ -51,7 +51,7 @@ namespace BookStoreAPI.Models
         public List<OrderItem> GetItems(int id)
         {
             List<OrderItem> itemList = new List<OrderItem>();
-            comm.CommandText = "select * from OrderItems where OrderId="+id+"";
+            comm.CommandText = "select o.ItemId,o.Qty,o.BookId,o.OrderId,b.Title,b.Image,b.Price from OrderItems o inner join Books b on o.BookId=b.BookId  where OrderId="+id+"";
             comm.Connection = conn;
             conn.Open();
             SqlDataReader reader = comm.ExecuteReader();
@@ -62,7 +62,12 @@ namespace BookStoreAPI.Models
                 int qty = Convert.ToInt32(reader["Qty"]);
                 int bookId = Convert.ToInt32(reader["BookId"]);
                 int orderId = Convert.ToInt32(reader["OrderId"]);
-                OrderItem order = new OrderItem(itemId,qty,bookId,orderId);
+
+                string title = reader["Title"].ToString();
+                string image= reader["Image"].ToString();
+                float price = float.Parse( reader["Price"].ToString());
+
+                OrderItem order = new OrderItem(itemId,qty,bookId,orderId,title,image,price);
                 itemList.Add(order);
             }
             conn.Close();

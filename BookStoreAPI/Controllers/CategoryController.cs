@@ -26,6 +26,13 @@ namespace BookStoreAPI.Controllers
             return Ok(data);
         }
 
+        [HttpGet, Route("api/category/all")]
+        public IHttpActionResult GetAll()
+        {
+            var data = repo.GetAllCategories();
+            return Ok(data);
+        }
+
         [HttpPost]
         public IHttpActionResult Post(Category cat)
         {

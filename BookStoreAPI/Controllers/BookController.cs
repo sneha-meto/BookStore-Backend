@@ -34,8 +34,15 @@ namespace BookStoreAPI.Controllers
             return Ok(data);
         }
 
+        [HttpGet, Route("api/book/search/all/{type}/{key}")]
+        public IHttpActionResult SearchAll(string type, string key)
+        {
+            var data = repo.SearchAllBooks(type, key);
+            return Ok(data);
+        }
 
-        //[HttpGet, Route("api/book/id/{id}")]
+
+
         [HttpGet]
         public IHttpActionResult GetBookById(int id)
         {
